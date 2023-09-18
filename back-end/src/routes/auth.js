@@ -9,6 +9,6 @@ export const router = Router();
 router.post(
   "/login",
   shemasHandler(postLoginShema, "body"),
-  passportLocal, // verifica las credenciales localmente
-  wrapError(AuthCrll.login) // crea el token
+  passportLocal, 
+  wrapError(AuthCrll.login)
 );

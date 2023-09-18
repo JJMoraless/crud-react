@@ -13,28 +13,15 @@ const localStrategy = new Strategy(
     passwordField: "password",
   },
   async (email, password, done) => {
-    console.log("🚀 ~ file: local.strategy.js:16 ~ email:", email);
-    console.log("🚀 ~ file: local.strategy.js:16 ~  password:", password);
     try {
       const user = await User.findOne({ email });
-      console.log("🚀 ~ file: local.strategy.js:20 ~ user:", user);
       if (!user) {
         throw new ClientError("email error");
       }
-      console.log(
-        "🚀 ~ file: local.strategy.js:24 ~ user.password:",
-        user.password
-      );
-
       const isMatchPass = await compare(password, user.password);
-      console.log(
-        "🚀 ~ file: local.strategy.js:25 ~ isMatchPass:",
-        isMatchPass
-      );
       if (!isMatchPass) {
         throw new ClientError("password incorrect");
       }
-
       delete user.password;
       done(null, user);
     } catch (error) {

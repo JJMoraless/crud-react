@@ -1,6 +1,6 @@
 import { resOk } from "../utils/functions.js";
 import db from "../../db/conection.js";
-import { request } from "express";
+import { request, response } from "express";
 import { ObjectId } from "mongodb";
 const Product = db.collection("product");
 
@@ -10,13 +10,27 @@ export class ProductsCrll {
     resOk(res, { product: productoCreate });
   }
 
-  static async update(req, res) {
-    const { _id, ...restProduct } = req.body;
+  static async get(req = request, res) {
+    const producsFound = await Product.find().toArray();
+    resOk(res, { products: producsFound });
+  }
+
+  static async getById(req = request, res) {
+    const { id } = req.params;
+    const producsFound = await Product.findOne({ _id: new ObjectId(id) });
+    resOk(res, { products: producsFound });
+  }
+
+  static async put(req = request, res) {
+    const { id } = req.params;
+    const { product } = req.body;
+
     const productoCreate = await Product.updateOne(
-      { _id: new ObjectId(_id) },
-      { $set: { ...restProduct } }
+      { _id: new ObjectId(id) },
+      { $set: { ...product } }
     );
-    resOk(res, { msg: "funciona 2" });
+
+    resOk(res, { product: productoCreate });
   }
 
   static async delete(req, res) {
